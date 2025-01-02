@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo apt update
 sudo apt upgrade -y
-sudo apt install -y ufw crowdsec fail2ban
+sudo apt install -y ufw crowdsec fail2ban htop
 
 DEFAULT_IPS=("127.0.0.1" "::1")
 if [ -n "${PRIVATE_IPS}" ]; then
@@ -15,7 +15,8 @@ sudo ufw default allow outgoing
 for ip in "${ALLOWED_IPS[@]}"; do
     sudo ufw allow from $ip to any port 22
 done
-sudo ufw enable
+
+yes | sudo ufw enable
 
 for ip in "${ALLOWED_IPS[@]}"; do
     sudo cscli decisions add --ip $ip --type whitelist
@@ -42,3 +43,5 @@ EOF'
 sudo systemctl restart ufw
 sudo systemctl restart crowdsec
 sudo systemctl restart fail2ban
+
+
